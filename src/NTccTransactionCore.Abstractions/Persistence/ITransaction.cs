@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,10 +9,6 @@ namespace NTccTransactionCore.Abstractions
     {
         event EventHandler Disoped;
 
-        event EventHandler PrevCommit;
-
-        event EventHandler PrevRollback;
-
         TransactionXid Xid { get; }
         TransactionStatus Status { get; set; }
         TransactionType TransactionType { get; }
@@ -20,13 +17,13 @@ namespace NTccTransactionCore.Abstractions
         DateTime LastUpdateUtcTime { get; set; }
         long Version { get; set; }
 
-        Task CommitAsync();
+        Task CommitAsync(IServiceScopeFactory serviceScopeFactory);
 
-        Task RollbackAsync();
+        Task RollbackAsync(IServiceScopeFactory serviceScopeFactory);
 
-        void UpdateRetriedCount();
+        void AddRetriedCount();
 
-        void UpdateVersion();
+        void AddVersion();
 
         void ChangeStatus(TransactionStatus status);
 

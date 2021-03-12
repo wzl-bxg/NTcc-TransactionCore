@@ -54,7 +54,7 @@ namespace NTccTransactionCore
                         await _transactionRecovery.StartRecoverAsync();
 
                         _cts.Token.ThrowIfCancellationRequested();
-                        _cts.Token.WaitHandle.WaitOne(_options.FailedRetryInterval);
+                        _cts.Token.WaitHandle.WaitOne(_options.FailedRetryInterval * 1000);
                     }
                 }
                 catch (OperationCanceledException ex)

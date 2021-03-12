@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using NTccTransactionCore.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,6 @@ namespace NTccTransactionCore
     {
         [field: NonSerialized]
         public event EventHandler Disoped;
-
-        [field: NonSerialized]
-        public event EventHandler PrevCommit;
-
-        [field: NonSerialized]
-        public event EventHandler PrevRollback;
 
         public TransactionXid Xid { get; set; }
         public TransactionStatus Status { get; set; }
@@ -58,35 +53,29 @@ namespace NTccTransactionCore
             this.TransactionType = TransactionType.BRANCH;
         }
 
-        public async Task CommitAsync()
+        public async Task CommitAsync(IServiceScopeFactory serviceScopeFactory)
         {
-            ChangeStatus(TransactionStatus.CONFIRMING);
-            PrevCommit?.Invoke(this, new EventArgs());
-
             foreach (var participant in FindAllParticipantAsReadOnly())
             {
-                await participant.CommitAsync();
+                await participant.CommitAsync(serviceScopeFactory);
             }
         }
 
-        public async Task RollbackAsync()
+        public async Task RollbackAsync(IServiceScopeFactory serviceScopeFactory)
         {
-            ChangeStatus(TransactionStatus.CANCELLING);
-            PrevRollback?.Invoke(this, new EventArgs());
-
             foreach (var participant in FindAllParticipantAsReadOnly())
             {
-                await participant.RollbackAsync();
+                await participant.RollbackAsync(serviceScopeFactory);
             }
         }
 
-        public void UpdateRetriedCount()
+        public void AddRetriedCount()
         {
             this.RetriedCount++;
             this.LastUpdateUtcTime = DateTime.Now.ToUniversalTime();
         }
 
-        public void UpdateVersion()
+        public void AddVersion()
         {
             this.Version++;
             this.LastUpdateUtcTime = DateTime.Now.ToUniversalTime();

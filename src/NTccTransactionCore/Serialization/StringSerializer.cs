@@ -16,6 +16,7 @@ namespace NTccTransactionCore
                 TypeNameHandling = TypeNameHandling.All,
                 NullValueHandling = NullValueHandling.Ignore
             };
+            
             return JsonConvert.DeserializeObject<T>(content, settings);
         }
 

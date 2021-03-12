@@ -45,6 +45,9 @@ namespace NTccTransactionCore.Http.Order.WebApi
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<OrderService>();
 
+            services.AddTransient<IOrderService1, OrderService1>();
+            services.AddTransient<OrderService1>();
+
             services.AddTransient<ICapitalProxy, CapitalProxy>();
             services.AddTransient<CapitalProxy>();
 

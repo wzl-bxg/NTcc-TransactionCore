@@ -94,7 +94,7 @@ namespace NTccTransaction.Oracle
                 throw new ConcurrencyTransactionException();
             }
 
-            transaction.UpdateVersion();
+            transaction.AddVersion();
             entity.CreateUtcTime = transaction.CreateUtcTime;
             entity.LastUpdateUtcTime = transaction.LastUpdateUtcTime;
             entity.RetriedCount = transaction.RetriedCount;

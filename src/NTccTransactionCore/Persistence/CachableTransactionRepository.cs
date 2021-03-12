@@ -46,10 +46,7 @@ namespace NTccTransactionCore
                     throw new ConcurrencyTransactionException();
                 }
             }
-            catch (Exception ex)
-            {
-                throw new TransactionException($"Exception occurred while updating the transaction, xid:{transaction.Xid}", ex);
-            }
+           
             finally
             {
                 if (result <= 0)
@@ -62,14 +59,9 @@ namespace NTccTransactionCore
         public void Delete(ITransaction transaction)
         {
             int result = 0;
-
             try
             {
                 result = DoDelete(transaction);
-            }
-            catch (Exception ex)
-            {
-                throw new TransactionException($"Exception occurred while deeting the transaction, xid:{transaction.Xid}", ex);
             }
             finally
             {

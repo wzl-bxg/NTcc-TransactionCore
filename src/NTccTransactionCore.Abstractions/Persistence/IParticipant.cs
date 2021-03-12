@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ namespace NTccTransactionCore.Abstractions
         InvocationContext CancelInvocationContext { get; set; }
 
 
-        Task CommitAsync();
-        Task RollbackAsync();
+        Task CommitAsync(IServiceScopeFactory serviceScopeFactory);
+        Task RollbackAsync(IServiceScopeFactory serviceScopeFactory);
     }
 }

@@ -108,23 +108,28 @@ namespace NTccTransactionCore
         {
             var transaction = this.Current;
 
-            try
+            // When confirm successfully, delete the NTccTransaction from database
+            // The confirm action will be call from the top of stack, so delete the transaction data will not impact the excution under it
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
-                await transaction.CommitAsync();
+                var transactionRepository = scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
+                transaction.ChangeStatus(TransactionStatus.CONFIRMING);
+                transactionRepository.Update(transaction);
 
-                // When confirm successfully, delete the NTccTransaction from database
-                // The confirm action will be call from the top of stack, so delete the transaction data will not impact the excution under it
-                using (var scope = _serviceScopeFactory.CreateScope())
+                try
                 {
-                    var transactionRepository = scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
+                    await transaction.CommitAsync(_serviceScopeFactory);
                     transactionRepository.Delete(transaction);
                 }
+                catch (Exception commitException)
+                {
+                    throw new ConfirmingException("Confirm failed", commitException);
+                }
+                finally
+                {
+                    transaction.Dispose();
+                }
             }
-            catch (Exception commitException)
-            {
-                throw new ConfirmingException("Confirm failed", commitException);
-            }
-
         }
 
         /// <summary>
@@ -134,21 +139,31 @@ namespace NTccTransactionCore
         {
             var transaction = this.Current;
 
-            try
+
+           
+
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
-                await transaction.RollbackAsync();
+                var transactionRepository = scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
 
-                using (var scope = _serviceScopeFactory.CreateScope())
+                transaction.ChangeStatus(TransactionStatus.CANCELLING);
+                transactionRepository.Update(transaction);
+
+                try
                 {
-                    var transactionRepository = scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
-
+                    await transaction.RollbackAsync(_serviceScopeFactory);
                     transactionRepository.Delete(transaction);
                 }
+                catch (Exception rollbackException)
+                {
+                    throw new CancellingException("Rollback failed", rollbackException);
+                }
+                finally
+                {
+                    transaction.Dispose();
+                }
             }
-            catch (Exception rollbackException)
-            {
-                throw new CancellingException("Rollback failed", rollbackException);
-            }
+
         }
 
         /// <summary>
@@ -180,24 +195,6 @@ namespace NTccTransactionCore
         private void RegisterTransaction(ITransaction transaction)
         {
             _ambientTransaction.RegisterTransaction(transaction);
-            transaction.PrevCommit += (sender, args) =>
-            {
-                using (var scope = _serviceScopeFactory.CreateScope())
-                {
-                    var transactionRepository = scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
-
-                    transactionRepository.Update((ITransaction)sender);
-                }
-            };
-
-            transaction.PrevRollback += (sender, args) =>
-            {
-                using (var scope = _serviceScopeFactory.CreateScope())
-                {
-                    var transactionRepository = scope.ServiceProvider.GetRequiredService<ITransactionRepository>();
-                    transactionRepository.Update((ITransaction)sender);
-                }
-            };
         }
 
         public bool IsDelayCancelException(Exception tryingException, HashSet<Type> allDelayCancelExceptionTypes)

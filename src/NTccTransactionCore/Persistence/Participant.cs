@@ -14,24 +14,23 @@ namespace NTccTransactionCore
 
         public InvocationContext CancelInvocationContext { get; set; }
 
-        private readonly IServiceProvider _serviceProvider;
-
-        private readonly ITransactionMethodInvoker _tccTransactionMethodInvoker;
-
-        public Participant(IServiceProvider serviceProvider, ITransactionMethodInvoker tccTransactionMethodInvoker)
+       
+        public async Task CommitAsync(IServiceScopeFactory serviceScopeFactory)
         {
-            _serviceProvider = serviceProvider;
-            _tccTransactionMethodInvoker = tccTransactionMethodInvoker;
+            using (var scope = serviceScopeFactory.CreateScope())
+            {
+                ITransactionMethodInvoker tccTransactionMethodInvoker = scope.ServiceProvider.GetRequiredService<ITransactionMethodInvoker>();
+                await tccTransactionMethodInvoker.InvokeAsync(new TransactionContext(Xid, TransactionStatus.CONFIRMING), ConfirmInvocationContext);
+            }
         }
 
-        public async Task CommitAsync()
+        public async Task RollbackAsync(IServiceScopeFactory serviceScopeFactory)
         {
-            await _tccTransactionMethodInvoker.InvokeAsync(new TransactionContext(Xid, TransactionStatus.CONFIRMING), ConfirmInvocationContext);
-        }
-
-        public async Task RollbackAsync()
-        {
-            await _tccTransactionMethodInvoker.InvokeAsync(new TransactionContext(Xid, TransactionStatus.CANCELLING), CancelInvocationContext);
+            using (var scope = serviceScopeFactory.CreateScope())
+            {
+                ITransactionMethodInvoker tccTransactionMethodInvoker = scope.ServiceProvider.GetRequiredService<ITransactionMethodInvoker>();
+                await tccTransactionMethodInvoker.InvokeAsync(new TransactionContext(Xid, TransactionStatus.CANCELLING), CancelInvocationContext);
+            }
         }
     }
 }
