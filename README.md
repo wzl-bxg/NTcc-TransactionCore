@@ -1,4 +1,4 @@
-# NTcc-TransactionCore - The .NET Core implementation based on tcc-transaction 
+# NTcc-TransactionCore - The .NET Core port based on tcc-transaction 
 tcc transaction for .NET Core
 
 ## Introduction
