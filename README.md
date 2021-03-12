@@ -1,5 +1,5 @@
 # NTcc-TransactionCore - The .NET Core port based on tcc-transaction 
-tcc transaction for .NET Core
+
 
 ## Introduction
 
