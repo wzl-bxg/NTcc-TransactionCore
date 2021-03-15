@@ -9,19 +9,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A1AD4F79-2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{F77EE4FB-4501-4CE4-A92B-72259171F206}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTccTransactionCore", "src\NTccTransactionCore\NTccTransactionCore.csproj", "{8A46B1E4-1A6C-4F9D-BF2B-75BA574757E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTccTransaction", "src\NTccTransaction\NTccTransaction.csproj", "{8A46B1E4-1A6C-4F9D-BF2B-75BA574757E1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTccTransactionCore.Oracle", "src\NTccTransactionCore.Oracle\NTccTransactionCore.Oracle.csproj", "{2B83E6DA-EBF2-4067-BBB2-F5126BE6C1B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTccTransaction.Oracle", "src\NTccTransaction.Oracle\NTccTransaction.Oracle.csproj", "{2B83E6DA-EBF2-4067-BBB2-F5126BE6C1B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTccTransactionCore.Aop", "src\NTccTransactionCore.Aop\NTccTransactionCore.Aop.csproj", "{61A42BA6-8DDB-4AD8-B053-5268BD9066FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTccTransaction.Aop", "src\NTccTransaction.Aop\NTccTransaction.Aop.csproj", "{61A42BA6-8DDB-4AD8-B053-5268BD9066FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTccTransactionCore.Abstractions", "src\NTccTransactionCore.Abstractions\NTccTransactionCore.Abstractions.csproj", "{6827958D-2CC2-4F96-AB18-7579ED94D0D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTccTransaction.Abstractions", "src\NTccTransaction.Abstractions\NTccTransaction.Abstractions.csproj", "{6827958D-2CC2-4F96-AB18-7579ED94D0D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTccTransactionCore.Http.Order.WebApi", "samples\NTccTransactionCore.Http.Order.WebApi\NTccTransactionCore.Http.Order.WebApi.csproj", "{B64BFC0D-C524-4A44-B92C-119EF4A474BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTccTransaction.Http.Order.WebApi", "samples\NTccTransaction.Http.Order.WebApi\NTccTransaction.Http.Order.WebApi.csproj", "{B64BFC0D-C524-4A44-B92C-119EF4A474BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTccTransactionCore.Test", "test\NTccTransactionCore.Test\NTccTransactionCore.Test.csproj", "{79A7395F-2665-4821-A587-07FD2A381DCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTccTransaction.Test", "test\NTccTransaction.Test\NTccTransaction.Test.csproj", "{79A7395F-2665-4821-A587-07FD2A381DCB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTccTransactionCore.Http.Capital.WebApi", "samples\NTccTransactionCore.Http.Capital.WebApi\NTccTransactionCore.Http.Capital.WebApi.csproj", "{6241B896-5234-4684-9B42-0CAC8E8D5D00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTccTransaction.Http.Capital.WebApi", "samples\NTccTransaction.Http.Capital.WebApi\NTccTransaction.Http.Capital.WebApi.csproj", "{6241B896-5234-4684-9B42-0CAC8E8D5D00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
