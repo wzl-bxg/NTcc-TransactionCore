@@ -20,13 +20,13 @@ namespace NTccTransaction
         public int RetriedCount { get; set; }
         public DateTime CreateUtcTime { get; set; }
         public DateTime LastUpdateUtcTime { get; set; }
-        public long Version { get; set; }
+        public int Version { get; set; }
 
         private Transaction()
         {
             CreateUtcTime = DateTime.Now.ToUniversalTime();
             LastUpdateUtcTime = DateTime.Now.ToUniversalTime();
-            Version = 1L;
+            Version = 1;
         }
 
         public Transaction(TransactionType transactionType)

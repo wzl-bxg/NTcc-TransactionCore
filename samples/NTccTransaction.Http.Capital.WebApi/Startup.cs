@@ -51,10 +51,9 @@ namespace NTccTransaction.Http.Capital.WebApi
 
             services.AddNTccTransaction((option) =>
             {
-                option.UseOracle((oracleOption) =>
+                option.UseSqlServer((oracleOption) =>
                 {
                     oracleOption.ConnectionString = Configuration.GetConnectionString("capitalDb");
-                    oracleOption.Version = "11";
                 });
 
                 option.UseCastleInterceptor(); // inject castle interceptor

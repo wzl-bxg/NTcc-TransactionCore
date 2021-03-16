@@ -16,7 +16,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\NTccTransaction.Aop\NTccTransaction.Aop.csproj" />
-		<ProjectReference Include="..\..\src\NTccTransaction.Oracle\NTccTransaction.Oracle.csproj" />
+		<ProjectReference Include="..\..\src\NTccTransaction.SqlServer\NTccTransaction.SqlServer.csproj" />
 	</ItemGroup>
 
 </Project>

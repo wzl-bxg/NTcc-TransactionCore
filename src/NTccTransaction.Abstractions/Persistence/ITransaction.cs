@@ -15,7 +15,7 @@ namespace NTccTransaction.Abstractions
         int RetriedCount { get; set; }
         DateTime CreateUtcTime { get; }
         DateTime LastUpdateUtcTime { get; set; }
-        long Version { get; set; }
+        int Version { get; set; }
 
         Task CommitAsync(IServiceScopeFactory serviceScopeFactory);
 

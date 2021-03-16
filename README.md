@@ -20,10 +20,11 @@ NTcc-TransactionCore can be installed in your project with the following command
  PM> Install-Package NTccTransactionCore
 ~~~
 
-NTcc-TransactionCore Currently only supports Oracle as data storage, following packages are available to install:
+NTcc-TransactionCore Currently supports Oracle, SqlServer as transaction log storage, following packages are available to install:
 
 ~~~shell
  PM> Install-Package NTccTransactionCore.Oracle
+ PM> Install-Package NTccTransactionCore.SqlServer
 ~~~
 
 ### Configuration
@@ -65,26 +66,50 @@ First, you need to configure NTcc-TransactionCore in your <font color="#28a745">
 
 ### DB Script
 
-Currently only supports oracle database，execute the following database script to create transaction table:
+Currently only supports Oracle, SqlServer database, execute the following database script to create transaction table:
+
+#### Oracle
 
 ~~~sql
 CREATE TABLE NTCC_TRANSACTION 
 (
-  TRANSACTION_ID NVARCHAR2(128) NOT NULL 
-, GLOBAL_TRANSACTION_ID VARCHAR(128)
-, BRANCH_QUALIFIER VARCHAR(128) 
-, STATUS NUMBER(9, 0) NOT NULL 
-, TRANSACTION_TYPE NUMBER(9, 0) NOT NULL 
-, RETRIED_COUNT NUMBER(9, 0) NOT NULL 
-, CREATE_UTC_TIME DATE NOT NULL 
-, LAST_UPDATE_UTC_TIME DATE NOT NULL 
-, VERSION NUMBER(19, 0) NOT NULL 
-, CONTENT CLOB 
-, CONSTRAINT PK_NTCC_TRANSACTION PRIMARY KEY 
-  (
-    TRANSACTION_ID 
-  )
+    TRANSACTION_ID NVARCHAR2(128) NOT NULL 
+	, GLOBAL_TRANSACTION_ID NVARCHAR2(128)
+	, BRANCH_QUALIFIER NVARCHAR2(128) 
+	, STATUS NUMBER(9, 0) NOT NULL 
+	, TRANSACTION_TYPE NUMBER(9, 0) NOT NULL 
+	, RETRIED_COUNT NUMBER(9, 0) NOT NULL 
+	, CREATE_UTC_TIME DATE NOT NULL 
+	, LAST_UPDATE_UTC_TIME DATE NOT NULL 
+	, VERSION NUMBER(9, 0) NOT NULL 
+	, CONTENT CLOB 
+	, CONSTRAINT PK_NTCC_TRANSACTION PRIMARY KEY 
+	  (
+	    TRANSACTION_ID 
+	  )
 );
+~~~
+
+#### Sql Server
+
+~~~sql
+CREATE TABLE [dbo].[NTCC_TRANSACTION] 
+(
+	[TRANSACTION_ID] nvarchar(128) NOT NULL 
+	,[GLOBAL_TRANSACTION_ID] nvarchar(128) NULL 
+	,[BRANCH_QUALIFIER] nvarchar(128) NULL 
+	,[STATUS] int NOT NULL 
+	,[TRANSACTION_TYPE] int NOT NULL 
+	,[RETRIED_COUNT] int NOT NULL 
+	,[CREATE_UTC_TIME] datetime NOT NULL 
+	,[LAST_UPDATE_UTC_TIME] datetime NOT NULL 
+	,[VERSION] int NOT NULL 
+	,[CONTENT] nvarchar(MAX) NULL 
+	,PRIMARY KEY 
+	(
+		[TRANSACTION_ID]
+	)
+)
 ~~~
 
 

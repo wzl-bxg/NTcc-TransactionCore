@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using NTccTransaction.Oracle;
+using NTccTransaction.SqlServer;
 using NTccTransaction.Aop;
 using System;
 using System.Collections.Generic;
@@ -53,10 +53,10 @@ namespace NTccTransaction.Http.Order.WebApi
 
             services.AddNTccTransaction((option) =>
             {
-                option.UseOracle((oracleOption) =>
+                option.UseSqlServer((sqlOption) =>
                 {
-                    oracleOption.ConnectionString = Configuration.GetConnectionString("orderDb");
-                    oracleOption.Version = "11";
+                    sqlOption.ConnectionString = Configuration.GetConnectionString("orderDb");
+                 
                 });
 
                 option.UseCastleInterceptor();

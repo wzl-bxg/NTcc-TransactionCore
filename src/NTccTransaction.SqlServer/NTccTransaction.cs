@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NTccTransaction.Oracle
+namespace NTccTransaction.SqlServer
 {
     [Table("NTCC_TRANSACTION")]
     public class NTccTransaction
