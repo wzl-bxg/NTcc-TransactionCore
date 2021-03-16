@@ -16,13 +16,15 @@ NTcc-TransactionCore is an opensource project aimed at creating a free-for-comme
 
 NTcc-TransactionCore can be installed in your project with the following command.
 
-​	PM> Install-Package NTccTransactionCore
+~~~shell
+ PM> Install-Package NTccTransactionCore
+~~~
 
 NTcc-TransactionCore Currently only supports Oracle as data storage, following packages are available to install:
 
-​	PM> Install-Package NTccTransactionCore.Oracle
-
-
+~~~shell
+ PM> Install-Package NTccTransactionCore.Oracle
+~~~
 
 ### Configuration
 

@@ -125,10 +125,6 @@ namespace NTccTransaction
                 {
                     throw new ConfirmingException("Confirm failed", commitException);
                 }
-                finally
-                {
-                    transaction.Dispose();
-                }
             }
         }
 
@@ -138,9 +134,6 @@ namespace NTccTransaction
         public async Task RollbackAsync()
         {
             var transaction = this.Current;
-
-
-           
 
             using (var scope = _serviceScopeFactory.CreateScope())
             {
@@ -157,10 +150,6 @@ namespace NTccTransaction
                 catch (Exception rollbackException)
                 {
                     throw new CancellingException("Rollback failed", rollbackException);
-                }
-                finally
-                {
-                    transaction.Dispose();
                 }
             }
 

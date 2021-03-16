@@ -62,23 +62,24 @@ namespace NTccTransaction.Aop
             allDelayCancelExceptionTypes.AddRange(compensableMethodContext.Compensable.DelayCancelExceptionTypes);
 
 
-            var transaction = _transactionManager.Begin(compensableMethodContext.GetUniqueIdentity());
-
-            try
+            using (var transaction = _transactionManager.Begin(compensableMethodContext.GetUniqueIdentity()))
             {
-                await compensableMethodContext.MethodInvocation.ProceedAsync();
-            }
-            catch (Exception ex)
-            {
-                if (!_transactionManager.IsDelayCancelException(ex, allDelayCancelExceptionTypes))
+                try
                 {
-                    _logger.LogError(string.Format("compensable transaction trying failed. transaction content:{0} ", JsonConvert.SerializeObject(transaction)));
-                    await _transactionManager.RollbackAsync();
+                    await compensableMethodContext.MethodInvocation.ProceedAsync();
                 }
-                throw ex;
-            }
-            await _transactionManager.CommitAsync();
+                catch (Exception ex)
+                {
+                    if (!_transactionManager.IsDelayCancelException(ex, allDelayCancelExceptionTypes))
+                    {
+                        _logger.LogError(string.Format("compensable transaction trying failed. transaction content:{0} ", JsonConvert.SerializeObject(transaction)));
+                        await _transactionManager.RollbackAsync();
+                    }
+                    throw ex;
+                }
 
+                await _transactionManager.CommitAsync();
+            }
         }
 
         private async Task ProviderMethodProceed(CompensableMethodContext compensableMethodContext)
