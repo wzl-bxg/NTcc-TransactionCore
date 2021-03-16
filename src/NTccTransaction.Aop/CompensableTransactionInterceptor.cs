@@ -36,7 +36,7 @@ namespace NTccTransaction.Aop
 
             if (!TransactionUtils.IsLegalTransactionContext(isTransactionActive, compensableMethodContext))
             {
-                throw new TransactionException($"no available compensable transaction，the method {compensableMethodContext.MethodInfo.Name} is forced to propagated");
+                throw new TransactionException($"no available compensable transaction, the method {compensableMethodContext.MethodInfo.Name} is illegal");
             }
 
             switch (compensableMethodContext.GetMethodRole(isTransactionActive))
@@ -72,7 +72,7 @@ namespace NTccTransaction.Aop
             {
                 if (!_transactionManager.IsDelayCancelException(ex, allDelayCancelExceptionTypes))
                 {
-                    _logger.LogError(string.Format("compensable transaction trying failed.transaction content:{0} ", JsonConvert.SerializeObject(transaction)));
+                    _logger.LogError(string.Format("compensable transaction trying failed. transaction content:{0} ", JsonConvert.SerializeObject(transaction)));
                     await _transactionManager.RollbackAsync();
                 }
                 throw ex;
@@ -88,7 +88,7 @@ namespace NTccTransaction.Aop
             switch (compensableMethodContext.TransactionContext.Status)
             {
                 case TransactionStatus.TRYING:
-                    var transaction = _transactionManager.PropagationNewBegin(compensableMethodContext.TransactionContext);
+                    _transactionManager.PropagationNewBegin(compensableMethodContext.TransactionContext);
 
                     await compensableMethodContext.MethodInvocation.ProceedAsync();
                     break;
@@ -100,9 +100,10 @@ namespace NTccTransaction.Aop
                             await _transactionManager.CommitAsync();
                         }
                     }
-                    catch (NoExistedTransactionException)
+                    catch (Exception ex)
                     {
-                        //the transaction has been commit,ignore it.
+                        _logger.LogWarning(ex, "the transaction has been committed");
+                        //the transaction has been commit, ignore it.
                     }
                     break;
                 case TransactionStatus.CANCELLING:
@@ -113,9 +114,10 @@ namespace NTccTransaction.Aop
                             await _transactionManager.RollbackAsync();
                         }
                     }
-                    catch (NoExistedTransactionException)
+                    catch (Exception ex)
                     {
-                        //the transaction has been rollback,ignore it.
+                        _logger.LogWarning(ex, "the transaction has been cancelled");
+                        //the transaction has been rollback, ignore it.
                     }
                     break;
             }
