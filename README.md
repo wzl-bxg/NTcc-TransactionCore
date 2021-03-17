@@ -18,6 +18,7 @@ NTcc-TransactionCore can be installed in your project with the following command
 
 ~~~shell
  PM> Install-Package NTccTransactionCore
+ PM> Install-Package NTccTransactionCore.Aop
 ~~~
 
 NTcc-TransactionCore Currently supports Oracle, SqlServer as transaction log storage, following packages are available to install:
