@@ -152,14 +152,14 @@ In your business service, you need implement <font color="#28a745">`INTccTransac
 And add the attribute  <font color="#28a745">`[Compensable(CancelMethod = "xxx", ConfirmMethod = "xxx")]` </font>on the `Try` method:
 
  ~~~c#
- 	[Compensable(CancelMethod = "CancelOrder", ConfirmMethod = "ConfirmOrder")]
-    public async Task<string> TryPostOrder(string input, TransactionContext transactionContext = null)
-    {       
-        return await Task.FromResult("");
-    }
+   [Compensable(CancelMethod = "CancelOrder", ConfirmMethod = "ConfirmOrder")]
+   public async Task<string> TryPostOrder(string input, TransactionContext transactionContext = null)
+   {       
+      return await Task.FromResult("");
+   }
  ~~~
 
-The type of the last parameter of the <font color="#28a745">`Try Method`</font> must be <font color="#28a745">`TransactionContext`</font>, it's used to propagate transactions, and you need add <font color="#28a745">`Confirm Method`</font> and <font color="#28a745">`Cancel Method`</font> in the business logic service，the parameters of the two methods must be same as <font color="#28a745">`Try Method`</font>.
+The type of the last parameter of the <font color="#28a745">`Try`</font> method must be <font color="#28a745">`TransactionContext`</font>, it's used to propagate transactions, and you need add <font color="#28a745">`Confirm`</font> method and <font color="#28a745">`Cancel`</font> method in the business logic service，the parameters of the two methods must be same as <font color="#28a745">`Try `</font> method.
 
 ~~~C#
    public async Task ConfirmOrder(string input, TransactionContext transactionContext = null)
@@ -178,9 +178,9 @@ Then register your class that implement   <font color="#28a745">`INTccTransactio
 ```c#
    public void ConfigureServices(IServiceCollection services)
    {
-		services.AddTransient<IOrderService, OrderService>();
-	  	services.AddTransient<OrderService>();
-	}
+       services.AddTransient<IOrderService, OrderService>();
+       services.AddTransient<OrderService>();
+   }
 ```
 
 ### Contribute
