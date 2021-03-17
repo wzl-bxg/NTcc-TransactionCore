@@ -66,16 +66,16 @@ First, you need to configure NTcc-TransactionCore in your <font color="#28a745">
 
 ### DB Script
 
-Currently only supports Oracle, SqlServer database, execute the following database script to create transaction table:
+Currently supports Oracle, SqlServer as transaction log storage, execute the following database script to create transaction table:
 
 #### Oracle
 
 ~~~sql
 CREATE TABLE NTCC_TRANSACTION 
 (
-  TRANSACTION_ID NVARCHAR2(128) NOT NULL 
-  , GLOBAL_TRANSACTION_ID NVARCHAR2(128)
-  , BRANCH_QUALIFIER NVARCHAR2(128) 
+  TRANSACTION_ID VARCHAR2(128) NOT NULL 
+  , GLOBAL_TRANSACTION_ID VARCHAR2(128)
+  , BRANCH_QUALIFIER VARCHAR2(128) 
   , STATUS NUMBER(9, 0) NOT NULL 
   , TRANSACTION_TYPE NUMBER(9, 0) NOT NULL 
   , RETRIED_COUNT NUMBER(9, 0) NOT NULL 
@@ -95,9 +95,9 @@ CREATE TABLE NTCC_TRANSACTION
 ~~~sql
 CREATE TABLE [dbo].[NTCC_TRANSACTION] 
 (
-  [TRANSACTION_ID] nvarchar(128) NOT NULL 
-  ,[GLOBAL_TRANSACTION_ID] nvarchar(128) NULL 
-  ,[BRANCH_QUALIFIER] nvarchar(128) NULL 
+  [TRANSACTION_ID] varchar(128) NOT NULL 
+  ,[GLOBAL_TRANSACTION_ID] varchar(128) NULL 
+  ,[BRANCH_QUALIFIER] varchar(128) NULL 
   ,[STATUS] int NOT NULL 
   ,[TRANSACTION_TYPE] int NOT NULL 
   ,[RETRIED_COUNT] int NOT NULL 
