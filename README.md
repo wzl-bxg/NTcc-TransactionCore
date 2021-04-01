@@ -33,36 +33,36 @@ NTcc-TransactionCore Currently supports Oracle, SqlServer as transaction log sto
 First, you need to configure NTcc-TransactionCore in your <font color="#28a745">`Startup.cs`</font>：
 
 ~~~c#
-   public ILifetimeScope AutofacContainer { get; private set; }
+public ILifetimeScope AutofacContainer { get; private set; }
 
-   public IServiceCollection Services { get; private set; }
+public IServiceCollection Services { get; private set; }
 
-   public void ConfigureServices(IServiceCollection services)
-   {
-       //......
-           
-        services.AddNTccTransaction((option) =>
+public void ConfigureServices(IServiceCollection services)
+{
+    //......
+
+    services.AddNTccTransaction((option) =>
+    {
+        option.UseOracle((oracleOption) =>
         {
-            option.UseOracle((oracleOption) =>
-            {
-                oracleOption.ConnectionString = Configuration.GetConnectionString("Your ConnectionStrings");// 						configure db connectiong
-            });
-
-            option.UseCastleInterceptor(); // use Castle Interceptor
+            oracleOption.ConnectionString = Configuration.GetConnectionString("Your ConnectionStrings");// 						configure db connectiong
         });
 
-        Services = services;
-    }
+        option.UseCastleInterceptor(); // use Castle Interceptor
+    });
 
-    public void ConfigureContainer(ContainerBuilder containerBuilder)
-    {
-        containerBuilder.Register(Services); // register Castle Interceptor
-    }
+    Services = services;
+}
 
-	public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
-    }
+public void ConfigureContainer(ContainerBuilder containerBuilder)
+{
+    containerBuilder.Register(Services); // register Castle Interceptor
+}
+
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    this.AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+}
 ~~~
 
 ### DB Script
@@ -120,67 +120,67 @@ CREATE TABLE [dbo].[NTCC_TRANSACTION]
 In your business service, you need implement <font color="#28a745">`INTccTransactionService`</font>:
 
 ~~~c#
-   public class OrderService : IOrderService, INTccTransactionService
-   {
-        private readonly ILogger<OrderService> _logger;
-        private readonly ICapitalProxy _capitalProxy;
+public class OrderService : IOrderService, INTccTransactionService
+{
+    private readonly ILogger<OrderService> _logger;
+    private readonly ICapitalProxy _capitalProxy;
 
-        public OrderService(ILogger<OrderService> logger, ICapitalProxy capitalProxy)
-        {
-            _logger = logger;
-            _capitalProxy = capitalProxy;
-        }
+    public OrderService(ILogger<OrderService> logger, ICapitalProxy capitalProxy)
+    {
+        _logger = logger;
+        _capitalProxy = capitalProxy;
+    }
 
-        [Compensable(CancelMethod = "CancelOrder", ConfirmMethod = "ConfirmOrder")]
-        public async Task<string> TryPostOrder(string input, TransactionContext transactionContext = null)
-        {
-              return await Task.FromResult("");
-        }
+    [Compensable(CancelMethod = "CancelOrder", ConfirmMethod = "ConfirmOrder")]
+    public async Task<string> TryPostOrder(string input, TransactionContext transactionContext = null)
+    {
+        return await Task.FromResult("");
+    }
 
-        public async Task ConfirmOrder(string input, TransactionContext transactionContext = null)
-        {
-            await Task.CompletedTask;
-        }
+    public async Task ConfirmOrder(string input, TransactionContext transactionContext = null)
+    {
+        await Task.CompletedTask;
+    }
 
-        public async Task CancelOrder(string input, TransactionContext transactionContext = null)
-        {
-            await Task.CompletedTask;
-        }
-   }
+    public async Task CancelOrder(string input, TransactionContext transactionContext = null)
+    {
+        await Task.CompletedTask;
+    }
+}
 ~~~
 
 And add the attribute  <font color="#28a745">`[Compensable(CancelMethod = "xxx", ConfirmMethod = "xxx")]` </font>on the `Try` method:
 
  ~~~c#
-   [Compensable(CancelMethod = "CancelOrder", ConfirmMethod = "ConfirmOrder")]
-   public async Task<string> TryPostOrder(string input, TransactionContext transactionContext = null)
-   {       
-      return await Task.FromResult("");
-   }
+[Compensable(CancelMethod = "CancelOrder", ConfirmMethod = "ConfirmOrder")]
+public async Task<string> TryPostOrder(string input, TransactionContext transactionContext = null)
+{
+    return await Task.FromResult("");
+}
  ~~~
 
 The type of the last parameter of the <font color="#28a745">`Try`</font> method must be <font color="#28a745">`TransactionContext`</font>, it's used to propagate transactions, and you need add <font color="#28a745">`Confirm`</font> method and <font color="#28a745">`Cancel`</font> method in the business logic service，the parameters of the two methods must be same as <font color="#28a745">`Try `</font> method.
 
 ~~~C#
-   public async Task ConfirmOrder(string input, TransactionContext transactionContext = null)
-   {
-       await Task.CompletedTask;
-   }
+public async Task ConfirmOrder(string input, TransactionContext transactionContext = null)
+{
+    await Task.CompletedTask;
+}
 
-   public async Task CancelOrder(string input, TransactionContext transactionContext = null)
-   {
-       await Task.CompletedTask;
-   }
+public async Task CancelOrder(string input, TransactionContext transactionContext = null)
+{
+    await Task.CompletedTask;
+}
 ~~~
 
 Then register your class that implement   <font color="#28a745">`INTccTransactionService`</font>  in  <font color="#28a745">`Startup.cs`</font> :
 
 ```c#
-   public void ConfigureServices(IServiceCollection services)
-   {
-       services.AddTransient<IOrderService, OrderService>();
-       services.AddTransient<OrderService>();
-   }
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddTransient<IOrderService, OrderService>();
+    services.AddTransient<OrderService>();
+}
 ```
 
 ### Contribute
